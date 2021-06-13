@@ -1,4 +1,5 @@
 import { ReportHandler } from 'web-vitals';
+import { logger } from './logger';
 
 export function reportWebVitals(onPerfEntry: boolean | ReportHandler): void {
   if (onPerfEntry && onPerfEntry instanceof Function) {
@@ -11,6 +12,6 @@ export function reportWebVitals(onPerfEntry: boolean | ReportHandler): void {
         getTTFB(onPerfEntry);
         return null;
       })
-      .catch((error) => console.error(error));
+      .catch((error) => logger.error(error));
   }
 }
