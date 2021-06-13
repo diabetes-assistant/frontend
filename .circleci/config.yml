@@ -1,0 +1,104 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@4.1
+
+jobs:
+  unit-test:
+    docker:
+      - image: cimg/node:15.1
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Run tests
+          command: |
+            JEST_JUNIT_OUTPUT_DIR=~/reports/junit/ npm run test:report
+      - store_test_results:
+          path: ~/reports/junit/
+      - store_artifacts:
+          path: ~/reports/junit
+
+  npm-audit:
+    docker:
+      - image: cimg/node:15.1
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Run audit
+          command: npm audit
+
+  security-check:
+    docker:
+      - image: aquasec/trivy
+    steps:
+      - checkout
+      - run:
+          name: Run security check
+          command: trivy fs ./
+
+  build:
+    docker:
+      - image: cimg/node:15.1
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Build static files
+          command: npm run build
+      - run:
+          name: Move docker related files
+          command: mv build docker/
+      - persist_to_workspace:
+          root: ~/project/
+          paths:
+            - docker
+
+  deploy-staging:
+    machine: true
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Build and push Docker image to Heroku
+          command: |
+            sudo curl https://cli-assets.heroku.com/install.sh | sh
+            heroku container:login
+            cd docker
+            heroku container:push -a staging-diabetes-assitant-fe web
+            heroku container:release -a staging-diabetes-assitant-fe web
+            curl https://staging-diabetes-assitant-fe.herokuapp.com
+
+  deploy-live:
+    machine: true
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Build and push Docker image to Heroku
+          command: |
+            sudo curl https://cli-assets.heroku.com/install.sh | sh
+            heroku container:login
+            cd docker
+            heroku container:push -a live-diabetes-assitant-fe web
+            heroku container:release -a live-diabetes-assitant-fe web
+            curl https://live-diabetes-assitant-fe.herokuapp.com
+
+workflows:
+  test-deploy:
+    jobs:
+      - unit-test
+      - npm-audit
+      - security-check
+      - build:
+          requires:
+            - unit-test
+            - npm-audit
+            - security-check
+      - deploy-staging:
+          requires:
+            - build
+      - deploy-live:
+          requires:
+            - deploy-staging
