@@ -1,0 +1,36 @@
+@value colors: "./colors.css";
+@value primary, primary-light, custom-gray-light, custom-black, custom-gray-dark from colors;
+@value sizes: "./sizes.css";
+@value font-size-bigger from sizes;
+
+.navigation {
+  height: 4.8rem;
+  border-bottom: 1px solid custom-gray-light;
+  display: flex;
+  justify-content: space-between;
+}
+
+.logo {
+  padding: 1.3rem 1.5rem;
+}
+
+.logo a {
+  font-weight: 500;
+  color: primary;
+}
+
+.logo a:hover {
+  color: primary-light;
+}
+
+.links {
+  padding: 1.3rem 1.5rem;
+}
+
+.links a {
+  color: custom-black;
+}
+
+.links a:hover {
+  color: custom-gray-dark;
+}

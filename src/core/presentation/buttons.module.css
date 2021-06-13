@@ -1,0 +1,45 @@
+@value colors: "./colors.css";
+@value primary, primary-light, custom-gray, custom-black, custom-gray-dark, custom-white from colors;
+@value sizes: "./sizes.css";
+@value font-size-normal, spacer from sizes;
+
+.button {
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  padding: 0.6rem 1.2rem;
+  font-size: font-size-normal;
+  line-height: 2.4rem;
+  border-radius: 0.3rem;
+  box-sizing: border-box;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  min-width: 8rem;
+  margin-right: spacer;
+}
+
+.buttonPrimary {
+  color: custom-white;
+  background-color: primary;
+  border: 1px solid primary-light;
+}
+
+.button:hover {
+  background-color: primary-light;
+  color: custom-white;
+}
+
+.buttonSecondary {
+  color: custom-gray-dark;
+  background-color: custom-white;
+  border: 1px solid custom-gray;
+}
+
+.buttonSecondary:hover {
+  background-color: custom-white;
+  color: custom-black;
+  border: 1px solid custom-black;
+}
