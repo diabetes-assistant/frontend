@@ -38,9 +38,30 @@ jobs:
           name: Run security check
           command: trivy fs ./
 
-  build:
+  build-staging:
     docker:
       - image: cimg/node:15.1
+    environment:
+      REACT_APP_BACKEND: https://staging-diabetes-assistant-be.herokuapp.com/
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Build static files
+          command: npm run build
+      - run:
+          name: Move docker related files
+          command: mv build docker/
+      - persist_to_workspace:
+          root: ~/project/
+          paths:
+            - docker
+
+  build-live:
+    docker:
+      - image: cimg/node:15.1
+    environment:
+      REACT_APP_BACKEND: https://live-diabetes-assistant-be.herokuapp.com/
     steps:
       - checkout
       - node/install-packages
@@ -91,14 +112,17 @@ workflows:
       - unit-test
       - npm-audit
       - security-check
-      - build:
+      - build-staging:
           requires:
             - unit-test
             - npm-audit
             - security-check
       - deploy-staging:
           requires:
-            - build
-      - deploy-live:
+            - build-staging
+      - build-live:
           requires:
             - deploy-staging
+      - deploy-live:
+          requires:
+            - build-live

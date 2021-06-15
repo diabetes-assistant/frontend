@@ -27,7 +27,7 @@ describe('createToken', () => {
 
     await expect(actual).resolves.toBe(expected);
     await expect(axiosMock.post).toHaveBeenCalledWith(
-      'backend/token',
+      'backend/auth/token',
       given,
       AXIOS_CONFIG
     );

@@ -13,7 +13,7 @@ export interface CreateTokenDTO {
 
 export function createToken(dto: CreateTokenDTO): Promise<TokenDTO> {
   return axios
-    .post(`${baseUrl}token`, dto, config)
+    .post(`${baseUrl}auth/token`, dto, config)
     .then(({ data }) => data)
     .catch(errorLogging);
 }
