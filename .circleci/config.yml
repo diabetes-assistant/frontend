@@ -14,6 +14,7 @@ jobs:
           name: Run tests
           command: |
             JEST_JUNIT_OUTPUT_DIR=~/reports/junit/ npm run test:report
+            ls -all ~/reports/junit/
       - store_test_results:
           path: ~/reports/junit/
       - store_artifacts:
