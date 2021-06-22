@@ -2,7 +2,7 @@ import * as winston from 'winston';
 import { format } from 'winston';
 
 const logFormat = format.printf(
-  (info) => `${info.timestamp} ${info.level} [${info.label}]: ${info.message}`
+  (info) => `${info.level} - ${JSON.stringify(info.message)}`
 );
 
 export const logger = winston.createLogger({
@@ -10,7 +10,7 @@ export const logger = winston.createLogger({
   level: 'info',
   transports: [
     new winston.transports.Console({
-      format: format.combine(format.colorize(), logFormat),
+      format: format.combine(logFormat),
     }),
   ],
 });

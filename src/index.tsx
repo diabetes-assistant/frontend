@@ -12,6 +12,8 @@ import { reportWebVitals } from './core/domain/reportWebVitals';
 import { logger } from './core/domain/logger';
 import { Navigation } from './core/presentation/Navigation';
 import { Login } from './auth/presentation/Login';
+import { PrivateRoute, PublicRoute } from './core/presentation/Routes';
+import { Dashboard } from './patient/presentation/Dashboard';
 
 const NoMatchPage: (_props: any) => JSX.Element = (_props: any) => {
   const location = useLocation();
@@ -30,11 +32,14 @@ ReactDOM.render(
       <Navigation />
       <Switch>
         <Route exact path="/">
-          <Redirect to={{ pathname: '/login' }} />
+          <Redirect to={{ pathname: '/dashboard' }} />
         </Route>
-        <Route path="/login">
+        <PrivateRoute path="/dashboard">
+          <Dashboard />
+        </PrivateRoute>
+        <PublicRoute path="/login">
           <Login />
-        </Route>
+        </PublicRoute>
         <Route path="*">
           <NoMatchPage />
         </Route>
