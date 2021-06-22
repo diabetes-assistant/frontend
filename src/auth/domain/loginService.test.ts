@@ -28,12 +28,12 @@ describe('authenticate', () => {
     const email = 'foo@bar.com';
     const password = 'password';
 
-    const actual = await authenticate(email, password);
+    const actual = authenticate(email, password);
     const expected = validIdToken;
 
-    expect(createTokenMock).toHaveBeenCalledWith({ email, password });
-    expect(verifyMock).toHaveBeenCalledWith(signedIdToken, 'secret');
-    expect(actual).toBe(expected);
+    await expect(createTokenMock).toHaveBeenCalledWith({ email, password });
+    await expect(verifyMock).toHaveBeenCalledWith(signedIdToken, 'secret');
+    await expect(actual).resolves.toBe(expected);
   });
 
   it('should send error when verifying token fails', async () => {
