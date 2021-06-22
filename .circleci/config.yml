@@ -22,6 +22,18 @@ jobs:
       - store_artifacts:
           path: ~/reports/junit
 
+  lint:
+    docker:
+      - image: cimg/node:15.1
+    environment:
+      REACT_APP_ID_TOKEN_SECRET: secret
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Run linter
+          command: npm run lint
+
   npm-audit:
     docker:
       - image: cimg/node:15.1
@@ -113,6 +125,7 @@ workflows:
   test-deploy:
     jobs:
       - unit-test
+      - lint
       - npm-audit
       - security-check
       - build-staging:
