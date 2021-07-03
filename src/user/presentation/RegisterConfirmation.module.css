@@ -1,0 +1,12 @@
+@value colors: "../../core/presentation/colors.css";
+@value primary from colors;
+
+.confirmation {
+  text-align: center;
+  margin: 15rem auto auto;
+  max-width: 100rem;
+}
+
+.confirmationEmail {
+  color: primary;
+}

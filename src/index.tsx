@@ -16,6 +16,7 @@ import { Login } from './user/presentation/Login';
 import { PrivateRoute, PublicRoute } from './core/presentation/Routes';
 import { Dashboard } from './patient/presentation/Dashboard';
 import { Register } from './user/presentation/Register';
+import { RegisterConfirmation } from './user/presentation/RegisterConfirmation';
 
 const NoMatchPage: (_props: any) => JSX.Element = (_props: any) => {
   const location = useLocation();
@@ -43,6 +44,11 @@ ReactDOM.render(
           <Login />
         </PublicRoute>
         <PublicRoute exact path="/register" component={withRouter(Register)} />
+        <PublicRoute
+          exact
+          path="/register/confirmation"
+          component={withRouter(RegisterConfirmation)}
+        />
         <Route path="*">
           <NoMatchPage />
         </Route>
