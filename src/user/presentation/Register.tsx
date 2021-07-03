@@ -5,7 +5,7 @@ import { updateState } from '../../core/presentation/formHelper';
 import buttons from '../../core/presentation/buttons.module.css';
 import { ErrorInfo } from '../../core/presentation/ErrorInfo';
 import { logger } from '../../core/domain/logger';
-import { createUser } from '../domain/userService';
+import { registerUser } from '../domain/userService';
 
 function register(
   email: string,
@@ -22,7 +22,7 @@ function register(
       errorFn(errorMessage);
       return errorMessage;
     }
-    return createUser(email, password)
+    return registerUser(email, password)
       .then((_user) => {
         logger.info('Registered user');
         return successFn();

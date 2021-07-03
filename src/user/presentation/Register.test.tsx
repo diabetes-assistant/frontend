@@ -1,11 +1,11 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { Register } from './Register';
-import { createUser, User } from '../domain/userService';
+import { registerUser, User } from '../domain/userService';
 
 jest.mock('../domain/userService');
 
-const registerMock = createUser as jest.Mock<Promise<User>>;
+const registerMock = registerUser as jest.Mock<Promise<User>>;
 
 describe('Register component', () => {
   let emailField: Node;
