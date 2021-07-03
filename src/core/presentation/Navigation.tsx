@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Navigation.module.css';
-import { isAuthenticated } from '../../auth/domain/loginService';
+import { isAuthenticated } from '../../user/domain/loginService';
 
 function renderLink(link: { name: string; path: string }): JSX.Element {
   return (

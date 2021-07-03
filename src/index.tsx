@@ -11,7 +11,7 @@ import './index.module.css';
 import { reportWebVitals } from './core/domain/reportWebVitals';
 import { logger } from './core/domain/logger';
 import { Navigation } from './core/presentation/Navigation';
-import { Login } from './auth/presentation/Login';
+import { Login } from './user/presentation/Login';
 import { PrivateRoute, PublicRoute } from './core/presentation/Routes';
 import { Dashboard } from './patient/presentation/Dashboard';
 
