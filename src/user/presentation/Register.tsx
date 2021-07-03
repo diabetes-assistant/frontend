@@ -11,7 +11,8 @@ function register(
   email: string,
   password: string,
   passwordConfirmation: string,
-  errorFn: React.Dispatch<React.SetStateAction<string>>
+  errorFn: React.Dispatch<React.SetStateAction<string>>,
+  successFn: any
 ) {
   return (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -22,9 +23,9 @@ function register(
       return errorMessage;
     }
     return createUser(email, password)
-      .then((user) => {
+      .then((_user) => {
         logger.info('Registered user');
-        return user;
+        return successFn();
       })
       .catch((error: Error) => {
         logger.error('Was not able to register', error);
@@ -33,18 +34,31 @@ function register(
   };
 }
 
-export function Register(_props: any): JSX.Element {
+export function Register({
+  history,
+}: {
+  history: { push: (_: string) => any };
+}): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [error, setError] = useState('');
+  const redirectToConfirmationPage: () => void = () => {
+    history.push(`/register/confirmation?email=${email}`);
+  };
 
   return (
     <section className={styles.register}>
       <h1>Register</h1>
       <ErrorInfo errorMessage={error} />
       <form
-        onSubmit={register(email, password, passwordConfirmation, setError)}
+        onSubmit={register(
+          email,
+          password,
+          passwordConfirmation,
+          setError,
+          redirectToConfirmationPage
+        )}
       >
         <div className="group">
           <label htmlFor="email">

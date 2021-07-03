@@ -6,6 +6,7 @@ import {
   Redirect,
   Switch,
   useLocation,
+  withRouter,
 } from 'react-router-dom';
 import './index.module.css';
 import { reportWebVitals } from './core/domain/reportWebVitals';
@@ -41,9 +42,7 @@ ReactDOM.render(
         <PublicRoute path="/login">
           <Login />
         </PublicRoute>
-        <PublicRoute path="/register">
-          <Register />
-        </PublicRoute>
+        <PublicRoute exact path="/register" component={withRouter(Register)} />
         <Route path="*">
           <NoMatchPage />
         </Route>

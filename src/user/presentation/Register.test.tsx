@@ -8,12 +8,23 @@ jest.mock('../domain/userService');
 const registerMock = createUser as jest.Mock<Promise<User>>;
 
 describe('Register component', () => {
+  let emailField: Node;
+  let passwordField: Node;
+  let passwordConfirmationField: Node;
+  let registerButton: Node;
+  let pushMock: jest.Mock;
+
   beforeEach(() => {
-    render(<Register />);
+    pushMock = jest.fn();
+    render(<Register history={{ push: pushMock }} />);
     registerMock.mockResolvedValue({
       id: '1337',
       email: 'foo@bar.com',
     });
+    emailField = screen.getByTestId('email');
+    passwordField = screen.getByTestId('password');
+    passwordConfirmationField = screen.getByTestId('passwordConfirmation');
+    registerButton = screen.getByTestId('register');
   });
 
   it('should render', () => {
@@ -23,12 +34,6 @@ describe('Register component', () => {
   });
 
   it('should set state accordingly', () => {
-    const emailField = screen.getByTestId(/email/i);
-    const passwordField = screen.getByTestId('password');
-    const passwordConfirmationField = screen.getByTestId(
-      'passwordConfirmation'
-    );
-
     fireEvent.change(emailField, { target: { value: 'foo@bar.com' } });
     fireEvent.change(passwordField, { target: { value: 'password' } });
     fireEvent.change(passwordConfirmationField, {
@@ -41,13 +46,6 @@ describe('Register component', () => {
   });
 
   it('should send state to service', async () => {
-    const emailField = screen.getByTestId(/email/i);
-    const passwordField = screen.getByTestId('password');
-    const passwordConfirmationField = screen.getByTestId(
-      'passwordConfirmation'
-    );
-    const registerButton = screen.getByTestId('register');
-
     const email = 'foo@bar.com';
     const password = 'password';
     fireEvent.change(emailField, { target: { value: email } });
@@ -58,16 +56,10 @@ describe('Register component', () => {
     await fireEvent.click(registerButton);
 
     await expect(registerMock).toHaveBeenCalledWith(email, password);
+    await expect(pushMock).toHaveBeenCalled();
   });
 
   it('should error when passwords do not match', async () => {
-    const emailField = screen.getByTestId(/email/i);
-    const passwordField = screen.getByTestId('password');
-    const passwordConfirmationField = screen.getByTestId(
-      'passwordConfirmation'
-    );
-    const registerButton = screen.getByTestId('register');
-
     const email = 'foo@bar.com';
     const password = 'password';
     fireEvent.change(emailField, { target: { value: email } });
