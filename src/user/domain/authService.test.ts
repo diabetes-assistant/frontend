@@ -1,5 +1,5 @@
 import { verify } from 'jsonwebtoken';
-import { authenticate } from './loginService';
+import { authenticate } from './authService';
 import { createToken, TokenDTO } from '../data/loginClient';
 
 jest.mock('../data/loginClient');
@@ -10,9 +10,8 @@ const verifyMock = verify as jest.Mock;
 
 describe('authenticate', () => {
   const validIdToken = {
-    name: 'foo bar',
+    sub: 'foo bar',
     email: 'foo@bar.com',
-    email_verified: true,
   };
   const signedIdToken = 'foo';
 
@@ -29,11 +28,14 @@ describe('authenticate', () => {
     const password = 'password';
 
     const actual = authenticate(email, password);
-    const expected = validIdToken;
+    const expected = {
+      userId: validIdToken.sub,
+      email: validIdToken.email,
+    };
 
     await expect(createTokenMock).toHaveBeenCalledWith({ email, password });
     await expect(verifyMock).toHaveBeenCalledWith(signedIdToken, 'secret');
-    await expect(actual).resolves.toBe(expected);
+    await expect(actual).resolves.toStrictEqual(expected);
   });
 
   it('should send error when verifying token fails', async () => {

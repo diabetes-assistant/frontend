@@ -1,4 +1,4 @@
-import { verify } from 'jsonwebtoken';
+import { JwtPayload, verify } from 'jsonwebtoken';
 import { createToken } from '../data/loginClient';
 import { logger } from '../../core/domain/logger';
 
@@ -6,10 +6,8 @@ const ID_TOKEN_KEY = 'idToken';
 const ACCESS_TOKEN_KEY = 'accessToken';
 
 export interface IDToken {
-  name: string;
+  userId: string;
   email: string;
-  email_verified: boolean;
-  sub: string;
 }
 
 export function isAuthenticated(): boolean {
@@ -32,13 +30,20 @@ export function isAuthenticated(): boolean {
   }
 }
 
+function extractIDToken(token: string): IDToken {
+  const idTokenSecret: string = process.env.REACT_APP_ID_TOKEN_SECRET || '';
+  const decodedIdToken = verify(token, idTokenSecret) as JwtPayload;
+  return {
+    userId: `${decodedIdToken.sub}`,
+    email: `${decodedIdToken.email}`,
+  };
+}
+
 export function authenticatedUser(): IDToken | undefined {
   if (process.env.REACT_APP_LOCAL) {
     return {
-      name: 'foo bar',
+      userId: '1337',
       email: 'foo@bar.com',
-      email_verified: true,
-      sub: 'fooooasdasd',
     };
   }
   if (!isAuthenticated()) {
@@ -46,9 +51,8 @@ export function authenticatedUser(): IDToken | undefined {
   }
 
   const rawIdToken = localStorage.getItem(ID_TOKEN_KEY) || '';
-  const idTokenSecret: string = process.env.REACT_APP_ID_TOKEN_SECRET || '';
   try {
-    return verify(rawIdToken, idTokenSecret) as IDToken;
+    return extractIDToken(rawIdToken);
   } catch (error) {
     logger.error(error);
     return undefined;
@@ -64,13 +68,12 @@ export function authenticate(
   email: string,
   password: string
 ): Promise<IDToken> {
-  const idTokenSecret: string = process.env.REACT_APP_ID_TOKEN_SECRET || '';
   return createToken({ email, password }).then((token) => {
     try {
-      const decodedIdToken = verify(token.idToken, idTokenSecret) as IDToken;
+      const idToken: IDToken = extractIDToken(token.idToken);
       localStorage.setItem(ID_TOKEN_KEY, token.idToken);
       localStorage.setItem(ACCESS_TOKEN_KEY, token.accessToken);
-      return decodedIdToken;
+      return idToken;
     } catch (error) {
       logger.error('Error verifying idToken', error);
       throw new Error('Was not able to login. Please try again.');

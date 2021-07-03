@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from 'react';
 import classnames from 'classnames';
 import { updateState } from '../../core/presentation/formHelper';
-import { authenticate } from '../domain/loginService';
+import { authenticate } from '../domain/authService';
 import { logger } from '../../core/domain/logger';
 import { ErrorInfo } from '../../core/presentation/ErrorInfo';
 import styles from './Login.module.css';

@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { Login } from './Login';
-import { authenticate, IDToken } from '../domain/loginService';
+import { authenticate, IDToken } from '../domain/authService';
 
-jest.mock('../domain/loginService');
+jest.mock('../domain/authService');
 
 const authenticateMock = authenticate as jest.Mock<Promise<IDToken>>;
 
@@ -11,10 +11,8 @@ describe('Login component', () => {
   beforeEach(() => {
     render(<Login />);
     authenticateMock.mockResolvedValue({
-      name: 'foo bar',
+      userId: 'foo bar',
       email: 'foo@bar.com',
-      email_verified: true,
-      sub: 'foo-000',
     });
   });
 

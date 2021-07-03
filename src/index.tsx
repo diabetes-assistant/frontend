@@ -14,14 +14,15 @@ import { Navigation } from './core/presentation/Navigation';
 import { Login } from './user/presentation/Login';
 import { PrivateRoute, PublicRoute } from './core/presentation/Routes';
 import { Dashboard } from './patient/presentation/Dashboard';
+import { Register } from './user/presentation/Register';
 
 const NoMatchPage: (_props: any) => JSX.Element = (_props: any) => {
   const location = useLocation();
 
   return (
     <section>
-      <h1>😓 404 - Seite nicht gefunden</h1>
-      Leider wurde diese Seite ({location.pathname}) nicht gefunden.
+      <h1>😓 404 - Page not found</h1>
+      The requested page ({location.pathname}) does not exist.
     </section>
   );
 };
@@ -39,6 +40,9 @@ ReactDOM.render(
         </PrivateRoute>
         <PublicRoute path="/login">
           <Login />
+        </PublicRoute>
+        <PublicRoute path="/register">
+          <Register />
         </PublicRoute>
         <Route path="*">
           <NoMatchPage />
