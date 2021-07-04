@@ -22,6 +22,7 @@ describe('userClient', () => {
       {
         email,
         password: secret,
+        role: 'doctor'
       },
       AXIOS_CONFIG
     );
