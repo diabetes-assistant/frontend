@@ -1,9 +1,6 @@
 @value sizes: "../../core/presentation/sizes.css";
 @value spacer from sizes;
 
-.patientManagement {
+.addPatient {
   margin: spacer;
-}
-
-.actionBar {
 }

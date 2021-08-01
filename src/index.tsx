@@ -17,6 +17,7 @@ import { Dashboard } from './patient/presentation/Dashboard';
 import { Register } from './user/presentation/Register';
 import { RegisterConfirmation } from './user/presentation/RegisterConfirmation';
 import { NotFound } from './core/presentation/NotFound';
+import { AddPatient } from './patient/presentation/Add';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -28,6 +29,9 @@ ReactDOM.render(
         </Route>
         <PrivateRoute path="/dashboard">
           <Dashboard />
+        </PrivateRoute>
+        <PrivateRoute exact path="/patients/add">
+          <AddPatient />
         </PrivateRoute>
         <PublicRoute path="/login">
           <Login />
