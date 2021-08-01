@@ -1,0 +1,7 @@
+@value sizes: "../../core/presentation/sizes.css";
+@value spacer from sizes;
+
+.notFound {
+    margin: spacer;
+
+}

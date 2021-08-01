@@ -16,7 +16,7 @@ function register(
 ) {
   return (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const errorMessage = 'E-Mail or passwords are invalid. Please try again.';
+    const errorMessage = 'E-Mail oder Passwörter sind ungültig. Bitte noch einmal versuchen.';
     if (passwordConfirmation !== password) {
       logger.error('Was not able to register, passwords do not match');
       errorFn(errorMessage);
@@ -49,7 +49,7 @@ export function Register({
 
   return (
     <section className={styles.register}>
-      <h1>Register</h1>
+      <h1>Registrierung</h1>
       <ErrorInfo errorMessage={error} />
       <form
         onSubmit={register(
@@ -76,7 +76,7 @@ export function Register({
         </div>
         <div className="group">
           <label htmlFor="password">
-            Password<sup>*</sup>
+            Passwort<sup>*</sup>
             <input
               type="password"
               name="password"
@@ -90,7 +90,7 @@ export function Register({
         </div>
         <div className="group">
           <label htmlFor="passwordConfirmation">
-            Password confirmation<sup>*</sup>
+            Passwort bestätigen<sup>*</sup>
             <input
               type="password"
               name="passwordConfirmation"
@@ -107,7 +107,7 @@ export function Register({
           className={classnames(buttons.button, buttons.buttonPrimary)}
           data-testid="register"
         >
-          Create account
+          Account erstellen
         </button>
       </form>
     </section>

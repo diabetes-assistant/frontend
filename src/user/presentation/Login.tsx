@@ -22,7 +22,7 @@ function signIn(
       })
       .catch((error: Error) => {
         logger.error('Was not able to authenticate', error);
-        errorFn('E-Mail or password invalid. Please try again.');
+        errorFn('E-Mail oder Passwort stimmen nicht. Bitte noch einmal versuchen.');
       });
   };
 }
@@ -58,7 +58,7 @@ export function Login(_props: any): JSX.Element {
         </div>
         <div className="group">
           <label htmlFor="password">
-            Password<sup>*</sup>
+            Passwort<sup>*</sup>
             <input
               type="password"
               name="password"
@@ -75,7 +75,7 @@ export function Login(_props: any): JSX.Element {
           className={classnames(buttons.button, buttons.buttonPrimary)}
           data-testid="sign-in"
         >
-          Sign in
+          Anmelden
         </button>
       </form>
     </section>

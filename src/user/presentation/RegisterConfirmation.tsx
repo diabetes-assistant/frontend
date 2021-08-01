@@ -17,19 +17,19 @@ export function RegisterConfirmation({
   return (
     <section className={styles.confirmation}>
       <h1>
-        Thank you for registering{' '}
+        Danke für die Registrierung{' '}
         <span role="img" aria-label="party popper emoji">
           🎉
         </span>
       </h1>
       <p>
-        We will be sending you a confirmation email to{' '}
+        Wir werden in kürze eine Bestätigungsmail an die E-Mail{' '}
         <span className={styles.confirmationEmail} data-testid="email">
           {emailFromQuery}
         </span>{' '}
-        so you can confirm your registration.
+        verschicken. In dieser E-Mail finden Sie die weitere Anleitung zur Bestätigung.
       </p>
-      <p>Please make sure to check your inbox for the confirmation mail.</p>
+      <p>Bitte überprüfen Sie ihr E-Mail Postfach.</p>
     </section>
   );
 }

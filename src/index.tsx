@@ -5,7 +5,6 @@ import {
   Route,
   Redirect,
   Switch,
-  useLocation,
   withRouter,
 } from 'react-router-dom';
 import './index.module.css';
@@ -17,17 +16,7 @@ import { PrivateRoute, PublicRoute } from './core/presentation/Routes';
 import { Dashboard } from './patient/presentation/Dashboard';
 import { Register } from './user/presentation/Register';
 import { RegisterConfirmation } from './user/presentation/RegisterConfirmation';
-
-const NoMatchPage: (_props: any) => JSX.Element = (_props: any) => {
-  const location = useLocation();
-
-  return (
-    <section>
-      <h1>😓 404 - Page not found</h1>
-      The requested page ({location.pathname}) does not exist.
-    </section>
-  );
-};
+import { NotFound } from './core/presentation/NotFound';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -50,7 +39,7 @@ ReactDOM.render(
           component={withRouter(RegisterConfirmation)}
         />
         <Route path="*">
-          <NoMatchPage />
+          <NotFound />
         </Route>
       </Switch>
     </Router>
