@@ -28,7 +28,7 @@ describe('Register component', () => {
   });
 
   it('should render', () => {
-    const text = screen.getByText(/create account/i);
+    const text = screen.getByText(/erstellen/i);
 
     expect(text).toBeInTheDocument();
   });

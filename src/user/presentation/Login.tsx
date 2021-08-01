@@ -39,7 +39,7 @@ export function Login(_props: any): JSX.Element {
 
   return (
     <section className={styles.login}>
-      <h1>Login</h1>
+      <h1>Anmelden</h1>
       <ErrorInfo errorMessage={error} />
       <form onSubmit={signIn(email, password, setError, redirect)}>
         <div className="group">

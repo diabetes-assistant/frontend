@@ -22,11 +22,11 @@ function getLinks(): Array<{ name: string; path: string }> {
   }
   return [
     {
-      name: 'Login',
+      name: 'Anmelden',
       path: '/login',
     },
     {
-      name: 'Register',
+      name: 'Registrieren',
       path: '/register',
     },
   ];

@@ -17,9 +17,9 @@ describe('Login component', () => {
   });
 
   it('should render login', () => {
-    const text = screen.getByText(/login/i);
+    const text = screen.getAllByText(/anmelden/i);
 
-    expect(text).toBeInTheDocument();
+    expect(text).not.toBe([]);
   });
 
   it('should set state accordingly', () => {
@@ -34,7 +34,7 @@ describe('Login component', () => {
   });
 
   it('should send state to service', async () => {
-    const signInButton = screen.getByText(/sign in/i);
+    const signInButton = screen.getByTestId(/sign-in/i);
     const emailField = screen.getByTestId(/email/i);
     const passwordField = screen.getByTestId(/password/i);
 
