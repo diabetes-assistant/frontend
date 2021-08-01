@@ -1,3 +1,5 @@
+@value colors: "../../core/presentation/colors.css";
+@value custom-gray-dark, custom-gray, secondary-dark from colors;
 @value sizes: "../../core/presentation/sizes.css";
 @value spacer from sizes;
 
@@ -6,4 +8,26 @@
 }
 
 .actionBar {
+  margin-bottom: spacer;
+}
+
+.patientsOverview table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.patientsOverview table td,
+.patientsOverview table th {
+  padding: 1.2rem;
+  vertical-align: top;
+  text-align: left;
+  border-bottom: solid 1px custom-gray;
+}
+
+.patientManagementEmail {
+  width: 20%;
+}
+
+.noPatientsHint {
+  color: custom-gray-dark;
 }
