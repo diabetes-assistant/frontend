@@ -8,7 +8,7 @@ export interface PatientDTO {
 
 export function getPatients(userId: string): Promise<PatientDTO[]> {
   return axios
-    .get(`${baseUrl}patients?doctorId=${userId}`, withTokenConfig)
+    .get(`${baseUrl}patient?doctorId=${userId}`, withTokenConfig)
     .then(({ data }) => data)
     .catch(errorLogging);
 }

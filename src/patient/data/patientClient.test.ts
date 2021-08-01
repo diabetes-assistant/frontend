@@ -19,7 +19,7 @@ describe('patientClient', () => {
 
     await expect(actual).resolves.toStrictEqual(expected);
     await expect(axiosMock.get).toHaveBeenCalledWith(
-      'backend/patients?doctorId=foobar',
+      'backend/patient?doctorId=foobar',
       AXIOS_CONFIG
     );
   });
