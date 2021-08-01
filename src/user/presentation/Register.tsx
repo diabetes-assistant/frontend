@@ -16,7 +16,8 @@ function register(
 ) {
   return (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const errorMessage = 'E-Mail oder Passwörter sind ungültig. Bitte noch einmal versuchen.';
+    const errorMessage =
+      'E-Mail oder Passwörter sind ungültig. Bitte noch einmal versuchen.';
     if (passwordConfirmation !== password) {
       logger.error('Was not able to register, passwords do not match');
       errorFn(errorMessage);

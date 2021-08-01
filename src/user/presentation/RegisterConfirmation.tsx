@@ -27,7 +27,8 @@ export function RegisterConfirmation({
         <span className={styles.confirmationEmail} data-testid="email">
           {emailFromQuery}
         </span>{' '}
-        verschicken. In dieser E-Mail finden Sie die weitere Anleitung zur Bestätigung.
+        verschicken. In dieser E-Mail finden Sie die weitere Anleitung zur
+        Bestätigung.
       </p>
       <p>Bitte überprüfen Sie ihr E-Mail Postfach.</p>
     </section>

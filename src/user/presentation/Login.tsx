@@ -22,7 +22,9 @@ function signIn(
       })
       .catch((error: Error) => {
         logger.error('Was not able to authenticate', error);
-        errorFn('E-Mail oder Passwort stimmen nicht. Bitte noch einmal versuchen.');
+        errorFn(
+          'E-Mail oder Passwort stimmen nicht. Bitte noch einmal versuchen.'
+        );
       });
   };
 }
