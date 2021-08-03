@@ -58,7 +58,7 @@ jobs:
       - image: cimg/node:15.1
     environment:
       REACT_APP_BACKEND: https://staging-diabetes-assistant-be.herokuapp.com/
-      REACT_APP_ID_TOKEN_SECRET: some-thing
+      REACT_APP_ID_TOKEN_SECRET: c29tZS10aGluZw==
     steps:
       - checkout
       - node/install-packages
