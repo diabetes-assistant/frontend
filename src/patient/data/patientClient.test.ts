@@ -5,7 +5,7 @@ jest.mock('axios');
 
 const axiosMock: jest.Mocked<AxiosInstance> = axios as any;
 const AXIOS_CONFIG = {
-  withCredentials: true,
+  withCredentials: false,
   headers: { Authorization: 'Bearer null' },
 };
 

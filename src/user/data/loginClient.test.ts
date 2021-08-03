@@ -4,7 +4,7 @@ import { createToken } from './loginClient';
 jest.mock('axios');
 
 const axiosMock: jest.Mocked<AxiosInstance> = axios as any;
-const AXIOS_CONFIG = { withCredentials: true };
+const AXIOS_CONFIG = { withCredentials: false };
 
 describe('createToken', () => {
   const validToken = {

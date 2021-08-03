@@ -1,10 +1,10 @@
 import { logger } from '../domain/logger';
 
 export const baseUrl = process.env.REACT_APP_BACKEND;
-export const config = { withCredentials: true };
+export const config = { withCredentials: false };
 const accessToken = localStorage.getItem('accessToken');
 export const withTokenConfig = {
-  withCredentials: true,
+  withCredentials: false,
   headers: { Authorization: `Bearer ${accessToken}` },
 };
 
