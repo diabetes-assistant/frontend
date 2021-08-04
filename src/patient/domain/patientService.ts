@@ -1,6 +1,10 @@
 import { getPatients, PatientDTO } from '../data/patientClient';
 import { authenticatedUser } from '../../user/domain/authService';
 
+export interface Assignment {
+  code: string;
+}
+
 export interface Patient {
   id: string;
   email: string;
@@ -21,4 +25,8 @@ export function findPatients(): Promise<Patient[]> {
     );
   }
   return getPatients(user.userId).then((dtos) => dtos.map(toPatient));
+}
+
+export function createAssignment(): Promise<Assignment> {
+  return Promise.reject(new Error('foo'));
 }

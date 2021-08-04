@@ -15,3 +15,10 @@
   font-weight: bold;
   background-color: custom-gray-light;
 }
+
+.confirmationCodeError {
+  padding: spacer 4rem;
+  border: 1px solid #e0245e;
+  width: 80rem;
+  text-align: center;
+}
