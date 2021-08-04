@@ -1,4 +1,4 @@
-import { getPatients, PatientDTO } from '../data/patientClient';
+import { getPatients, PatientDTO, postAssignment } from '../data/patientClient';
 import { authenticatedUser } from '../../user/domain/authService';
 
 export interface Assignment {
@@ -28,5 +28,13 @@ export function findPatients(): Promise<Patient[]> {
 }
 
 export function createAssignment(): Promise<Assignment> {
-  return Promise.reject(new Error('foo'));
+  const user = authenticatedUser();
+  if (!user) {
+    return Promise.reject(
+      new Error('Was not able to create assignment, user not logged in')
+    );
+  }
+  return postAssignment(user.userId).then((dto) => ({
+    code: dto.code,
+  }));
 }

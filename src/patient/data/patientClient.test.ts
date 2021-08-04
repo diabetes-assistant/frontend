@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { getPatients } from './patientClient';
+import { getPatients, postAssignment } from './patientClient';
 
 jest.mock('axios');
 
@@ -20,6 +20,21 @@ describe('patientClient', () => {
     await expect(actual).resolves.toStrictEqual(expected);
     await expect(axiosMock.get).toHaveBeenCalledWith(
       'backend/patient?doctorId=foobar',
+      AXIOS_CONFIG
+    );
+  });
+
+  it('should return assignment', async () => {
+    const code = { code: 'foobar' };
+    axiosMock.post.mockResolvedValue({ data: code });
+
+    const actual = postAssignment('bar');
+    const expected = { code: 'foobar' };
+
+    await expect(actual).resolves.toStrictEqual(expected);
+    await expect(axiosMock.post).toHaveBeenCalledWith(
+      'backend/assignment',
+      { doctorId: 'bar' },
       AXIOS_CONFIG
     );
   });

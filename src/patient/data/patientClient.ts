@@ -6,9 +6,20 @@ export interface PatientDTO {
   email: string;
 }
 
+export interface AssignmentDTO {
+  code: string;
+}
+
 export function getPatients(userId: string): Promise<PatientDTO[]> {
   return axios
     .get(`${baseUrl}patient?doctorId=${userId}`, withTokenConfig)
+    .then(({ data }) => data)
+    .catch(errorLogging);
+}
+
+export function postAssignment(doctorId: string): Promise<AssignmentDTO> {
+  return axios
+    .post(`${baseUrl}assignment`, { doctorId }, withTokenConfig)
     .then(({ data }) => data)
     .catch(errorLogging);
 }
