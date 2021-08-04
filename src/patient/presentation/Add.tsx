@@ -10,7 +10,11 @@ function renderCode(
   error: string | undefined
 ): JSX.Element {
   if (error) {
-    return <p className={styles.confirmationCodeError}><ErrorInfo errorMessage={error} /></p>;
+    return (
+      <p className={styles.confirmationCodeError}>
+        <ErrorInfo errorMessage={error} />
+      </p>
+    );
   }
   return <p className={styles.confirmationCode}>{confirmationCode}</p>;
 }
