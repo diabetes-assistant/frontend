@@ -1,6 +1,17 @@
 @value sizes: "../../core/presentation/sizes.css";
-@value spacer from sizes;
+@value spacer, font-size-bigger from sizes;
+@value colors: "../../core/presentation/colors.css";
+@value custom-gray-light from colors;
 
 .addPatient {
   margin: spacer;
+}
+
+.confirmationCode {
+  font-size: font-size-bigger;
+  padding: spacer 4rem;
+  width: 15rem;
+  text-align: center;
+  font-weight: bold;
+  background-color: custom-gray-light;
 }
