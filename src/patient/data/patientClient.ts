@@ -6,9 +6,15 @@ export interface PatientDTO {
   email: string;
 }
 
+export interface DoctorDTO {
+  id: string;
+  email: string;
+}
+
 export interface AssignmentDTO {
   code: string;
   patient?: PatientDTO;
+  doctor?: DoctorDTO;
 }
 
 export function getPatients(userId: string): Promise<PatientDTO[]> {
@@ -40,6 +46,16 @@ export function getInitialAssignments(
 export function getAssignment(code: string): Promise<AssignmentDTO> {
   return axios
     .get(`${baseUrl}assignment?code=${code}`, withTokenConfig)
+    .then(({ data }) => data)
+    .catch(errorLogging);
+}
+
+export function putAssignment(
+  doctorId: string,
+  code: string
+): Promise<AssignmentDTO> {
+  return axios
+    .put(`${baseUrl}assignment`, { doctorId, code }, withTokenConfig)
     .then(({ data }) => data)
     .catch(errorLogging);
 }

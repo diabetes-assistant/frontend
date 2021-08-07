@@ -2,12 +2,14 @@ import {
   getOrCreateAssignment,
   findPatients,
   findAssignment,
+  confirmDoctor,
 } from './patientService';
 import {
   getAssignment,
   getInitialAssignments,
   getPatients,
   postAssignment,
+  putAssignment,
 } from '../data/patientClient';
 import { authenticatedUser } from '../../user/domain/authService';
 
@@ -16,6 +18,7 @@ jest.mock('../../user/domain/authService');
 
 const getPatientsMock = getPatients as jest.Mock;
 const postAssignmentMock = postAssignment as jest.Mock;
+const putAssignmentMock = putAssignment as jest.Mock;
 const getAssignmentsMock = getInitialAssignments as jest.Mock;
 const getAssignmentMock = getAssignment as jest.Mock;
 const authenticatedUserMock = authenticatedUser as jest.Mock;
@@ -125,6 +128,36 @@ describe('patientService', () => {
       const actual = findAssignment('foobar');
 
       expect(getAssignmentMock).not.toHaveBeenCalled();
+      return expect(actual).rejects.not.toBeNull();
+    });
+  });
+
+  describe('confirmDoctor', () => {
+    it('should confirm a doctor successfully', () => {
+      const user = {
+        userId: '1337',
+        email: 'foo@bar.com',
+      };
+      authenticatedUserMock.mockReturnValue(user);
+      const confirmationCode = 'foobar';
+      const assignment = {};
+      putAssignmentMock.mockResolvedValue(assignment);
+
+      const actual = confirmDoctor(confirmationCode);
+
+      expect(putAssignmentMock).toHaveBeenCalledWith(
+        user.userId,
+        confirmationCode
+      );
+      return expect(actual).resolves.not.toBeNull();
+    });
+
+    it('should return error when user not authenticated', () => {
+      authenticatedUserMock.mockReturnValue(undefined);
+
+      const actual = getOrCreateAssignment();
+
+      expect(postAssignmentMock).not.toHaveBeenCalled();
       return expect(actual).rejects.not.toBeNull();
     });
   });

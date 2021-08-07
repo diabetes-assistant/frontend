@@ -4,8 +4,14 @@ import {
   getPatients,
   PatientDTO,
   postAssignment,
+  putAssignment,
 } from '../data/patientClient';
 import { authenticatedUser } from '../../user/domain/authService';
+
+export interface Doctor {
+  id: string;
+  email: string;
+}
 
 export interface Patient {
   id: string;
@@ -22,6 +28,7 @@ function toPatient(dto: PatientDTO): Patient {
 export interface Assignment {
   code: string;
   patient?: Patient;
+  doctor?: Doctor;
 }
 
 export function findPatients(): Promise<Patient[]> {
@@ -73,4 +80,13 @@ export async function getOrCreateAssignment(): Promise<Assignment> {
   return {
     code: assignments[0].code,
   };
+}
+
+export function confirmDoctor(confirmationCode: string): Promise<Assignment> {
+  const user = authenticatedUser();
+  if (!user) {
+    throw new Error('Was not able to create assignment, user not logged in');
+  }
+
+  return putAssignment(user.userId, confirmationCode);
 }

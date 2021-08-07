@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import styles from './Add.module.css';
 import buttons from '../../core/presentation/buttons.module.css';
-import { getOrCreateAssignment, Patient } from '../domain/patientService';
+import {
+  Assignment,
+  confirmDoctor,
+  getOrCreateAssignment,
+  Patient,
+} from '../domain/patientService';
 import { logger } from '../../core/domain/logger';
 import { ErrorInfo } from '../../core/presentation/ErrorInfo';
 import { getAssignment } from '../data/patientClient';
@@ -21,7 +26,10 @@ function renderCode(
   return <p className={styles.confirmationCode}>{confirmationCode}</p>;
 }
 
-function renderPatientConfirmation(patient: Patient | undefined): JSX.Element {
+function renderPatientConfirmation(
+  patient: Patient | undefined,
+  buttonFn: any
+): JSX.Element {
   if (patient) {
     return (
       <>
@@ -34,6 +42,7 @@ function renderPatientConfirmation(patient: Patient | undefined): JSX.Element {
           <button
             type="button"
             className={classNames(buttons.button, buttons.buttonPrimary)}
+            onClick={buttonFn}
           >
             Patient:in bestätigen
           </button>
@@ -50,7 +59,11 @@ function renderPatientConfirmation(patient: Patient | undefined): JSX.Element {
   );
 }
 
-export function AddPatient(_props: any): JSX.Element {
+export function AddPatient({
+  history,
+}: {
+  history: { push: (_: string) => any };
+}): JSX.Element {
   const [confirmationCode, setConfirmationCode] = useState<string>('');
   const [error, setError] = useState<undefined | string>(undefined);
   const [patient, setPatient] = useState<undefined | Patient>(undefined);
@@ -78,6 +91,10 @@ export function AddPatient(_props: any): JSX.Element {
         });
     }, 1000);
   }, [confirmationCode, timer]);
+  const buttonFn: () => Promise<Assignment> = () =>
+    confirmDoctor(confirmationCode)
+      .then((_) => history.push('/dashboard'))
+      .catch(logger.error);
 
   return (
     <section className={styles.addPatient}>
@@ -99,7 +116,7 @@ export function AddPatient(_props: any): JSX.Element {
         <li>
           Sobald Sie von ihrem/ihrer Patient:in bestätigt wurden, können Sie das
           mit einem Klick auf den unteren Button bestätigen:
-          {renderPatientConfirmation(patient)}
+          {renderPatientConfirmation(patient, buttonFn)}
         </li>
       </ol>
     </section>
