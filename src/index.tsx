@@ -30,9 +30,11 @@ ReactDOM.render(
         <PrivateRoute path="/dashboard">
           <Dashboard />
         </PrivateRoute>
-        <PrivateRoute exact path="/patients/add">
-          <AddPatient />
-        </PrivateRoute>
+        <PrivateRoute
+          exact
+          path="/patients/add"
+          component={withRouter(AddPatient)}
+         />
         <PublicRoute path="/login">
           <Login />
         </PublicRoute>
