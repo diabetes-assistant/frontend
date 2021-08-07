@@ -34,7 +34,7 @@ ReactDOM.render(
           exact
           path="/patients/add"
           component={withRouter(AddPatient)}
-         />
+        />
         <PublicRoute path="/login">
           <Login />
         </PublicRoute>

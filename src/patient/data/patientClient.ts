@@ -45,7 +45,7 @@ export function getInitialAssignments(
 
 export function getAssignment(code: string): Promise<AssignmentDTO> {
   return axios
-    .get(`${baseUrl}assignment?code=${code}`, withTokenConfig)
+    .get(`${baseUrl}assignment/${code}`, withTokenConfig)
     .then(({ data }) => data)
     .catch(errorLogging);
 }
@@ -55,7 +55,7 @@ export function putAssignment(
   code: string
 ): Promise<AssignmentDTO> {
   return axios
-    .put(`${baseUrl}assignment`, { doctorId, code }, withTokenConfig)
+    .put(`${baseUrl}assignment/${code}`, { doctorId }, withTokenConfig)
     .then(({ data }) => data)
     .catch(errorLogging);
 }
