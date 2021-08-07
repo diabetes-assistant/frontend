@@ -1,11 +1,13 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { AddPatient } from './Add';
-import { Assignment, createAssignment } from '../domain/patientService';
+import { Assignment, getOrCreateAssignment } from '../domain/patientService';
 
 jest.mock('../domain/patientService');
 
-const createAssignmentMock = createAssignment as jest.Mock<Promise<Assignment>>;
+const createAssignmentMock = getOrCreateAssignment as jest.Mock<
+  Promise<Assignment>
+>;
 
 describe('AddPatient component', () => {
   it('should render', () => {

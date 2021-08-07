@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Add.module.css';
 import buttons from '../../core/presentation/buttons.module.css';
-import { createAssignment } from '../domain/patientService';
+import { getOrCreateAssignment } from '../domain/patientService';
 import { logger } from '../../core/domain/logger';
 import { ErrorInfo } from '../../core/presentation/ErrorInfo';
 
@@ -25,7 +25,7 @@ export function AddPatient(_props: any): JSX.Element {
   );
   const [error, setError] = useState<undefined | string>(undefined);
   useEffect(() => {
-    createAssignment()
+    getOrCreateAssignment()
       .then((assignment) => setConfirmationCode(assignment.code))
       .catch((exception) => {
         logger.error('Was not able to create confirmation code', exception);

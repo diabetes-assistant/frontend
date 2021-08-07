@@ -1,4 +1,9 @@
-import { getPatients, PatientDTO, postAssignment } from '../data/patientClient';
+import {
+  getAssignments,
+  getPatients,
+  PatientDTO,
+  postAssignment,
+} from '../data/patientClient';
 import { authenticatedUser } from '../../user/domain/authService';
 
 export interface Assignment {
@@ -27,14 +32,21 @@ export function findPatients(): Promise<Patient[]> {
   return getPatients(user.userId).then((dtos) => dtos.map(toPatient));
 }
 
-export function createAssignment(): Promise<Assignment> {
+export async function getOrCreateAssignment(): Promise<Assignment> {
   const user = authenticatedUser();
   if (!user) {
-    return Promise.reject(
-      new Error('Was not able to create assignment, user not logged in')
-    );
+    throw new Error('Was not able to create assignment, user not logged in');
   }
-  return postAssignment(user.userId).then((dto) => ({
-    code: dto.code,
-  }));
+
+  const assignments = await getAssignments(user.userId);
+  if (assignments.length === 0) {
+    const dto = await postAssignment(user.userId);
+    return {
+      code: dto.code,
+    };
+  }
+
+  return {
+    code: assignments[0].code,
+  };
 }

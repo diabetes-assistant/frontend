@@ -23,3 +23,13 @@ export function postAssignment(doctorId: string): Promise<AssignmentDTO> {
     .then(({ data }) => data)
     .catch(errorLogging);
 }
+
+export function getAssignments(doctorId: string): Promise<AssignmentDTO[]> {
+  return axios
+    .get(
+      `${baseUrl}assignment?doctorId=${doctorId}&notCompleted=y`,
+      withTokenConfig
+    )
+    .then(({ data }) => data)
+    .catch(errorLogging);
+}
