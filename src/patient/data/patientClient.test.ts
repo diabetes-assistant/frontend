@@ -1,5 +1,10 @@
 import axios, { AxiosInstance } from 'axios';
-import { getPatients, postAssignment } from './patientClient';
+import {
+  getAssignment,
+  getInitialAssignments,
+  getPatients,
+  postAssignment,
+} from './patientClient';
 
 jest.mock('axios');
 
@@ -24,7 +29,7 @@ describe('patientClient', () => {
     );
   });
 
-  it('should return assignment', async () => {
+  it('should return created assignment', async () => {
     const code = { code: 'foobar' };
     axiosMock.post.mockResolvedValue({ data: code });
 
@@ -35,6 +40,35 @@ describe('patientClient', () => {
     await expect(axiosMock.post).toHaveBeenCalledWith(
       'backend/assignment',
       { doctorId: 'bar' },
+      AXIOS_CONFIG
+    );
+  });
+
+  it('should return existing assignment', async () => {
+    const code = { code: 'foobar' };
+    axiosMock.get.mockResolvedValue({ data: [code] });
+
+    const actual = getInitialAssignments('bar');
+    const expected = [{ code: 'foobar' }];
+
+    await expect(actual).resolves.toStrictEqual(expected);
+    await expect(axiosMock.get).toHaveBeenCalledWith(
+      'backend/assignment?doctorId=bar&state=initial',
+      AXIOS_CONFIG
+    );
+  });
+
+  it('should return an assignment', async () => {
+    const patient = { id: 'foobar', email: 'foo@bar.com' };
+    const assignment = { code: 'foobar', patient };
+    axiosMock.get.mockResolvedValue({ data: assignment });
+
+    const actual = getAssignment('bar');
+    const expected = { code: 'foobar', patient };
+
+    await expect(actual).resolves.toStrictEqual(expected);
+    await expect(axiosMock.get).toHaveBeenCalledWith(
+      'backend/assignment?code=bar',
       AXIOS_CONFIG
     );
   });

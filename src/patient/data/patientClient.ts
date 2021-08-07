@@ -8,6 +8,7 @@ export interface PatientDTO {
 
 export interface AssignmentDTO {
   code: string;
+  patient?: PatientDTO;
 }
 
 export function getPatients(userId: string): Promise<PatientDTO[]> {
@@ -24,12 +25,21 @@ export function postAssignment(doctorId: string): Promise<AssignmentDTO> {
     .catch(errorLogging);
 }
 
-export function getAssignments(doctorId: string): Promise<AssignmentDTO[]> {
+export function getInitialAssignments(
+  doctorId: string
+): Promise<AssignmentDTO[]> {
   return axios
     .get(
-      `${baseUrl}assignment?doctorId=${doctorId}&notCompleted=y`,
+      `${baseUrl}assignment?doctorId=${doctorId}&state=initial`,
       withTokenConfig
     )
+    .then(({ data }) => data)
+    .catch(errorLogging);
+}
+
+export function getAssignment(code: string): Promise<AssignmentDTO> {
+  return axios
+    .get(`${baseUrl}assignment?code=${code}`, withTokenConfig)
     .then(({ data }) => data)
     .catch(errorLogging);
 }

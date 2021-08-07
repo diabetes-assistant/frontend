@@ -1,14 +1,11 @@
 import {
-  getAssignments,
+  getAssignment,
+  getInitialAssignments,
   getPatients,
   PatientDTO,
   postAssignment,
 } from '../data/patientClient';
 import { authenticatedUser } from '../../user/domain/authService';
-
-export interface Assignment {
-  code: string;
-}
 
 export interface Patient {
   id: string;
@@ -22,6 +19,11 @@ function toPatient(dto: PatientDTO): Patient {
   };
 }
 
+export interface Assignment {
+  code: string;
+  patient?: Patient;
+}
+
 export function findPatients(): Promise<Patient[]> {
   const user = authenticatedUser();
   if (!user) {
@@ -32,13 +34,35 @@ export function findPatients(): Promise<Patient[]> {
   return getPatients(user.userId).then((dtos) => dtos.map(toPatient));
 }
 
+export function findAssignment(code: string): Promise<Assignment> {
+  const user = authenticatedUser();
+  if (!user) {
+    return Promise.reject(
+      new Error('Was not able to get all patients, user not logged in')
+    );
+  }
+
+  return getAssignment(code).then((dto) => {
+    if (!dto.patient) {
+      throw new Error(
+        'No patient available, it seems the assignment did not go as planned.'
+      );
+    }
+    const patient = toPatient(dto.patient);
+    return {
+      code: dto.code,
+      patient,
+    };
+  });
+}
+
 export async function getOrCreateAssignment(): Promise<Assignment> {
   const user = authenticatedUser();
   if (!user) {
     throw new Error('Was not able to create assignment, user not logged in');
   }
 
-  const assignments = await getAssignments(user.userId);
+  const assignments = await getInitialAssignments(user.userId);
   if (assignments.length === 0) {
     const dto = await postAssignment(user.userId);
     return {

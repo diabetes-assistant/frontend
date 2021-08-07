@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import classNames from 'classnames';
 import styles from './Add.module.css';
 import buttons from '../../core/presentation/buttons.module.css';
-import { getOrCreateAssignment } from '../domain/patientService';
+import { getOrCreateAssignment, Patient } from '../domain/patientService';
 import { logger } from '../../core/domain/logger';
 import { ErrorInfo } from '../../core/presentation/ErrorInfo';
+import { getAssignment } from '../data/patientClient';
 
 function renderCode(
   confirmationCode: string | undefined,
@@ -19,11 +21,40 @@ function renderCode(
   return <p className={styles.confirmationCode}>{confirmationCode}</p>;
 }
 
-export function AddPatient(_props: any): JSX.Element {
-  const [confirmationCode, setConfirmationCode] = useState<undefined | string>(
-    undefined
+function renderPatientConfirmation(patient: Patient | undefined): JSX.Element {
+  if (patient) {
+    return (
+      <>
+        <p>
+          <b>Patient:in</b>
+          <br />
+          {patient.email}
+        </p>
+        <p>
+          <button
+            type="button"
+            className={classNames(buttons.button, buttons.buttonPrimary)}
+          >
+            Patient:in bestätigen
+          </button>
+        </p>
+      </>
+    );
+  }
+  return (
+    <p>
+      <button type="button" className={buttons.buttonDeactivated}>
+        Patient:in bestätigen
+      </button>
+    </p>
   );
+}
+
+export function AddPatient(_props: any): JSX.Element {
+  const [confirmationCode, setConfirmationCode] = useState<string>('');
   const [error, setError] = useState<undefined | string>(undefined);
+  const [patient, setPatient] = useState<undefined | Patient>(undefined);
+  const [timer, setTimer] = useState<number>(0);
   useEffect(() => {
     getOrCreateAssignment()
       .then((assignment) => setConfirmationCode(assignment.code))
@@ -34,6 +65,19 @@ export function AddPatient(_props: any): JSX.Element {
         );
       });
   });
+  useEffect(() => {
+    setTimeout(() => {
+      getAssignment(confirmationCode)
+        .then((assignment) => setPatient(assignment.patient))
+        .catch((exception) => {
+          logger.error(
+            'Was not able to get confirmed patient, trying again',
+            exception
+          );
+          setTimer(timer + 1);
+        });
+    }, 1000);
+  }, [confirmationCode, timer]);
 
   return (
     <section className={styles.addPatient}>
@@ -55,11 +99,7 @@ export function AddPatient(_props: any): JSX.Element {
         <li>
           Sobald Sie von ihrem/ihrer Patient:in bestätigt wurden, können Sie das
           mit einem Klick auf den unteren Button bestätigen:
-          <p>
-            <button type="button" className={buttons.buttonDeactivated}>
-              Patient:in bestätigen
-            </button>
-          </p>
+          {renderPatientConfirmation(patient)}
         </li>
       </ol>
     </section>

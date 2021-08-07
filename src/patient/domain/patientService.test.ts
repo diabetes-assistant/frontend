@@ -1,6 +1,11 @@
-import { getOrCreateAssignment, findPatients } from './patientService';
 import {
-  getAssignments,
+  getOrCreateAssignment,
+  findPatients,
+  findAssignment,
+} from './patientService';
+import {
+  getAssignment,
+  getInitialAssignments,
   getPatients,
   postAssignment,
 } from '../data/patientClient';
@@ -11,7 +16,8 @@ jest.mock('../../user/domain/authService');
 
 const getPatientsMock = getPatients as jest.Mock;
 const postAssignmentMock = postAssignment as jest.Mock;
-const getAssignmentsMock = getAssignments as jest.Mock;
+const getAssignmentsMock = getInitialAssignments as jest.Mock;
+const getAssignmentMock = getAssignment as jest.Mock;
 const authenticatedUserMock = authenticatedUser as jest.Mock;
 
 describe('patientService', () => {
@@ -81,6 +87,44 @@ describe('patientService', () => {
       const actual = getOrCreateAssignment();
 
       expect(postAssignmentMock).not.toHaveBeenCalled();
+      return expect(actual).rejects.not.toBeNull();
+    });
+  });
+
+  describe('getAssignment', () => {
+    it('should return an assignment', () => {
+      const assignment = {
+        code: 'foobar',
+        patient: {
+          id: 'foo',
+          email: 'foo@bar.com',
+        },
+      };
+      getAssignmentMock.mockResolvedValue(assignment);
+      const user = {
+        userId: '1337',
+        email: 'foo@bar.com',
+      };
+      authenticatedUserMock.mockReturnValue(user);
+
+      const actual = findAssignment('foo');
+      const expected = {
+        code: 'foobar',
+        patient: {
+          id: 'foo',
+          email: 'foo@bar.com',
+        },
+      };
+
+      return expect(actual).resolves.toStrictEqual(expected);
+    });
+
+    it('should return error when user not authenticated', () => {
+      authenticatedUserMock.mockReturnValue(undefined);
+
+      const actual = findAssignment('foobar');
+
+      expect(getAssignmentMock).not.toHaveBeenCalled();
       return expect(actual).rejects.not.toBeNull();
     });
   });
