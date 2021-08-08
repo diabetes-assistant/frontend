@@ -69,34 +69,36 @@ export function AddPatient({
   const [patient, setPatient] = useState<undefined | Patient>(undefined);
   const [timer, setTimer] = useState<number>(0);
   useEffect(() => {
-    getOrCreateAssignment()
-      .then((assignment) => setConfirmationCode(assignment.code))
-      .catch((exception) => {
-        logger.error('Was not able to create confirmation code', exception);
-        setError(
-          'Es ist leider ein Fehler aufgetreten. Bitte versuchen Sie es erneut und aktualisieren Sie die Seite.'
-        );
-      });
-  });
+    if (confirmationCode === '') {
+      getOrCreateAssignment()
+        .then((assignment) => setConfirmationCode(assignment.code))
+        .catch((exception) => {
+          logger.error('Was not able to create confirmation code', exception);
+          setError(
+            'Es ist leider ein Fehler aufgetreten. Bitte versuchen Sie es erneut und aktualisieren Sie die Seite.'
+          );
+        });
+    }
+  }, [confirmationCode]);
   useEffect(() => {
-    setTimeout(
-      () =>
-        getAssignment(confirmationCode)
-          .then((assignment) => {
-            if (!assignment.patient) {
-              return setTimer(timer + 1);
-            }
-            return setPatient(assignment.patient);
-          })
-          .catch((exception) => {
-            logger.error(
-              'Was not able to get confirmed patient, trying again',
-              exception
-            );
-            setTimer(timer + 1);
-          }),
-      1000
-    );
+    setTimeout(() => {
+      logger.info(timer);
+      getAssignment(confirmationCode)
+        .then((assignment) => {
+          logger.info(assignment);
+          if (!assignment.patient) {
+            return setTimer(timer + 1);
+          }
+          return setPatient(assignment.patient);
+        })
+        .catch((exception) => {
+          logger.error(
+            'Was not able to get confirmed patient, trying again',
+            exception
+          );
+          setTimer(timer + 1);
+        });
+    }, 2000);
   }, [timer, confirmationCode]);
 
   const buttonFn: () => Promise<Assignment> = () =>
