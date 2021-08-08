@@ -22,10 +22,11 @@ export function isAuthenticated(): boolean {
 
   const idTokenSecret: string = process.env.REACT_APP_ID_TOKEN_SECRET || '';
   try {
-    verify(idToken, idTokenSecret);
+    verify(idToken, idTokenSecret, { audience: 'diabetes-assistant-client', issuer: 'diabetes-assistant-backend', ignoreExpiration: false});
     return true;
   } catch (error) {
     logger.error(error);
+    signOutUser();
     return false;
   }
 }
