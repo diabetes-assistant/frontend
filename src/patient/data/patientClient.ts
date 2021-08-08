@@ -15,6 +15,7 @@ export interface AssignmentDTO {
   code: string;
   patient?: PatientDTO;
   doctor?: DoctorDTO;
+  state: string;
 }
 
 export function getPatients(userId: string): Promise<PatientDTO[]> {
@@ -50,12 +51,9 @@ export function getAssignment(code: string): Promise<AssignmentDTO> {
     .catch(errorLogging);
 }
 
-export function putAssignment(
-  doctorId: string,
-  code: string
-): Promise<AssignmentDTO> {
+export function putAssignment(dto: AssignmentDTO): Promise<AssignmentDTO> {
   return axios
-    .put(`${baseUrl}assignment/${code}`, { doctorId }, withTokenConfig)
+    .put(`${baseUrl}assignment/${dto.code}`, dto, withTokenConfig)
     .then(({ data }) => data)
     .catch(errorLogging);
 }

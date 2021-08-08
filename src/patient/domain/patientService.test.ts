@@ -58,12 +58,12 @@ describe('patientService', () => {
         email: 'foo@bar.com',
       };
       authenticatedUserMock.mockReturnValue(user);
-      const assignment = { code: 'foobar' };
+      const assignment = { code: 'foobar', state: 'initial' };
       getAssignmentsMock.mockResolvedValue([]);
       postAssignmentMock.mockResolvedValue(assignment);
 
       const actual = getOrCreateAssignment();
-      const expected = { code: assignment.code };
+      const expected = { code: assignment.code, state: 'initial' };
 
       await expect(actual).resolves.toStrictEqual(expected);
     });
@@ -74,11 +74,16 @@ describe('patientService', () => {
         email: 'foo@bar.com',
       };
       authenticatedUserMock.mockReturnValue(user);
-      const assignment = { code: 'foobar' };
+      const assignment = { code: 'foobar', state: 'initial' };
       getAssignmentsMock.mockResolvedValue([assignment]);
 
       const actual = getOrCreateAssignment();
-      const expected = { code: assignment.code };
+      const expected = {
+        code: assignment.code,
+        patient: undefined,
+        doctor: undefined,
+        state: 'initial',
+      };
 
       await expect(actual).resolves.toStrictEqual(expected);
       await expect(postAssignment).not.toHaveBeenCalled();
@@ -102,6 +107,7 @@ describe('patientService', () => {
           id: 'foo',
           email: 'foo@bar.com',
         },
+        state: 'initial',
       };
       getAssignmentMock.mockResolvedValue(assignment);
       const user = {
@@ -117,6 +123,7 @@ describe('patientService', () => {
           id: 'foo',
           email: 'foo@bar.com',
         },
+        state: 'initial',
       };
 
       return expect(actual).resolves.toStrictEqual(expected);
@@ -140,16 +147,30 @@ describe('patientService', () => {
       };
       authenticatedUserMock.mockReturnValue(user);
       const confirmationCode = 'foobar';
-      const assignment = {};
-      putAssignmentMock.mockResolvedValue(assignment);
+      const assignment = {
+        code: confirmationCode,
+        state: 'confirmed',
+        doctor: undefined,
+        patient: undefined,
+      };
+      getAssignmentMock.mockResolvedValue(assignment);
+      const updatedAssignment = {
+        code: confirmationCode,
+        state: 'confirmed',
+        doctor: { id: user.userId, email: user.email },
+        patient: undefined,
+      };
+      putAssignmentMock.mockResolvedValue(updatedAssignment);
 
       const actual = confirmDoctor(confirmationCode);
+      const expected = {
+        code: confirmationCode,
+        state: 'confirmed',
+        doctor: { id: user.userId, email: user.email },
+        patient: undefined,
+      };
 
-      expect(putAssignmentMock).toHaveBeenCalledWith(
-        user.userId,
-        confirmationCode
-      );
-      return expect(actual).resolves.not.toBeNull();
+      return expect(actual).resolves.toStrictEqual(expected);
     });
 
     it('should return error when user not authenticated', () => {

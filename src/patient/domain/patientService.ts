@@ -1,4 +1,5 @@
 import {
+  AssignmentDTO,
   getAssignment,
   getInitialAssignments,
   getPatients,
@@ -29,6 +30,7 @@ export interface Assignment {
   code: string;
   patient?: Patient;
   doctor?: Doctor;
+  state: string;
 }
 
 export function findPatients(): Promise<Patient[]> {
@@ -59,6 +61,7 @@ export function findAssignment(code: string): Promise<Assignment> {
     return {
       code: dto.code,
       patient,
+      state: dto.state,
     };
   });
 }
@@ -74,19 +77,39 @@ export async function getOrCreateAssignment(): Promise<Assignment> {
     const dto = await postAssignment(user.userId);
     return {
       code: dto.code,
+      state: dto.state,
     };
   }
 
   return {
     code: assignments[0].code,
+    doctor: assignments[0].doctor,
+    patient: assignments[0].patient,
+    state: assignments[0].state,
   };
 }
 
-export function confirmDoctor(confirmationCode: string): Promise<Assignment> {
+export async function confirmDoctor(
+  confirmationCode: string
+): Promise<Assignment> {
   const user = authenticatedUser();
   if (!user) {
     throw new Error('Was not able to create assignment, user not logged in');
   }
 
-  return putAssignment(user.userId, confirmationCode);
+  const assignment = await getAssignment(confirmationCode);
+
+  const doctor = {
+    id: user.userId,
+    email: user.email,
+  };
+
+  const updatedAssignment: AssignmentDTO = {
+    code: assignment.code,
+    doctor,
+    patient: assignment.patient,
+    state: 'confirmed',
+  };
+
+  return putAssignment(updatedAssignment);
 }

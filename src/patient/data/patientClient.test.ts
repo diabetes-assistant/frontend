@@ -77,16 +77,16 @@ describe('patientClient', () => {
   it('should update an assignment', async () => {
     const patient = { id: 'foobar', email: 'foo@bar.com' };
     const doctor = { id: 'foobar', email: 'foo@bar.com' };
-    const assignment = { code: 'code', patient, doctor };
+    const assignment = { code: 'code', patient, doctor, state: 'completed' };
     axiosMock.put.mockResolvedValue({ data: assignment });
 
-    const actual = putAssignment('foobar', 'code');
+    const actual = putAssignment(assignment);
     const expected = assignment;
 
     await expect(actual).resolves.toStrictEqual(expected);
     await expect(axiosMock.put).toHaveBeenCalledWith(
       'backend/assignment/code',
-      { doctorId: 'foobar' },
+      assignment,
       AXIOS_CONFIG
     );
   });
