@@ -79,20 +79,25 @@ export function AddPatient({
       });
   });
   useEffect(() => {
-    setTimeout(() => {
-      logger.info("Trying to enable confirm doctor")
-      logger.info(timer)
+    setTimeout(
+      () =>
         getAssignment(confirmationCode)
-        .then((assignment) => setPatient(assignment.patient))
-        .catch((exception) => {
-          logger.error(
-            'Was not able to get confirmed patient, trying again',
-            exception
-          );
-          setTimer(timer + 1);
-        });
-    }, 1000);
-  });
+          .then((assignment) => {
+            if (!assignment.patient) {
+              return setTimer(timer + 1);
+            }
+            return setPatient(assignment.patient);
+          })
+          .catch((exception) => {
+            logger.error(
+              'Was not able to get confirmed patient, trying again',
+              exception
+            );
+            setTimer(timer + 1);
+          }),
+      1000
+    );
+  }, [timer, confirmationCode]);
 
   const buttonFn: () => Promise<Assignment> = () =>
     confirmDoctor(confirmationCode)
