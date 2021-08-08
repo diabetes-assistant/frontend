@@ -80,7 +80,9 @@ export function AddPatient({
   });
   useEffect(() => {
     setTimeout(() => {
-      getAssignment(confirmationCode)
+      logger.info("Trying to enable confirm doctor")
+      logger.info(timer)
+        getAssignment(confirmationCode)
         .then((assignment) => setPatient(assignment.patient))
         .catch((exception) => {
           logger.error(
@@ -91,6 +93,7 @@ export function AddPatient({
         });
     }, 1000);
   }, [confirmationCode, timer]);
+
   const buttonFn: () => Promise<Assignment> = () =>
     confirmDoctor(confirmationCode)
       .then((_) => history.push('/dashboard'))
