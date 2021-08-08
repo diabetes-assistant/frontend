@@ -92,7 +92,7 @@ export function AddPatient({
           setTimer(timer + 1);
         });
     }, 1000);
-  }, [confirmationCode, timer]);
+  });
 
   const buttonFn: () => Promise<Assignment> = () =>
     confirmDoctor(confirmationCode)
